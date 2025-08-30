@@ -1,0 +1,330 @@
+{
+  "categories": [
+    {
+      "title": "Components",
+      "items": [
+  { "title": "Card Split Menu", "href": "/components/card-split-menu", "tags": ["menu", "split", "radial"] },
+  { "title": "Cookie Card", "href": "/components/cookie-card", "tags": ["cookie", "banner"] },
+  { "title": "Cool Todo", "href": "/components/cool-todo", "tags": ["todo", "tasks"] },
+  { "title": "Feature Cards", "href": "/components/feature-cards", "tags": ["features", "grid"] },
+  { "title": "Fly Testimonial", "href": "/components/fly-testimonial", "tags": ["testimonial", "cards"] },
+  { "title": "Orbit Animation", "href": "/components/orbit-animation", "tags": ["orbit", "motion"] },
+  { "title": "Sparkle Button", "href": "/components/sparkle-button", "tags": ["button", "sparkle"] },
+  { "title": "Text Animation", "href": "/components/text-animations", "tags": ["text", "animation", "rotate"] }
+]
+    }
+  ],
+  "components": {
+    "cool-todo": {
+      "title": "Cool Todo",
+      "description": "A simple todo list component with a cool animation.",
+      "tags": ["todo", "tasks"],
+      "code": "import { motion } from \"motion/react\";\nimport { useEffect, useRef, useState } from \"react\";\n\ninterface TodoItem {\n  id: number;\n  title: string;\n  completed: boolean;\n}\n\ninterface TodoProps {\n  todos: TodoItem[];\n  speed?: \"normal\" | \"medium\" | \"fast\";\n  fontStyle?: string;\n  color?: string;\n}\n\ninterface animatedTodoProps {\n  todo: TodoItem;\n  onToggle: (id: number) => void;\n  duration: number;\n  color: string;\n  completed: boolean;\n}\n\nconst SPEED_MAP = {\n  normal: 0.6,\n  medium: 0.4,\n  fast: 0.2,\n} as const;\n\ntype Speed = keyof typeof SPEED_MAP;\n\nconst SVG_PATH =\n  \"M -5 10 Q 0 2, 5 10 T 15 10 T 25 10 T 35 10 T 45 10 T 55 10 T 65 10 T 75 10 T 85 10 T 95 10 T 105 10\";\n\nconst CoolTodo = ({\n  todos: initialTodos,\n  speed = \"normal\",\n  fontStyle = \"font-mono\",\n  color = \"text-neutral-700\",\n}: TodoProps) => {\n  const [todos, setTodos] = useState(initialTodos);\n\n  const handleToggle = (id: number) => {\n    setTodos((prev) =>\n      prev.map((todo) =>\n        todo.id === id ? { ...todo, completed: !todo.completed } : todo\n      )\n    );\n  };\n\n  const duration = SPEED_MAP[speed] ?? SPEED_MAP.normal;\n\n  return (\n    <div className={`flex flex-col justify-center items-center  ${fontStyle}`}>\n      <ul className=\"flex flex-col gap-2 p-2\">\n        {todos.map((todo) => (\n          <li key={todo.id} className=\"relative\">\n            <AnimatedTodo\n              todo={todo}\n              onToggle={handleToggle}\n              duration={duration}\n              color={color}\n              completed={false}\n            />\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n};\n\nconst AnimatedTodo = ({\n  todo,\n  onToggle,\n  duration,\n  color,\n}: animatedTodoProps) => {\n  const hasAnimated = useRef(false);\n\n  const shouldShowSpiral = todo.completed && !hasAnimated.current;\n\n  useEffect(() => {\n    if (todo.completed && !hasAnimated.current) {\n      hasAnimated.current = true;\n    }\n    if (!todo.completed) {\n      hasAnimated.current = false;\n    }\n  }, [todo.completed]);\n\n  return (\n    <motion.button\n      whileTap={{\n        scale: 1.2,\n        rotate: 45,\n      }}\n      animate={{\n        scale: todo.completed ? 1.2 : 1,\n      }}\n      transition={{\n        type: \"spring\",\n        stiffness: 300,\n        damping: 15,\n      }}\n      onClick={() => onToggle(todo.id)}\n      className=\"flex w-fit cursor-pointer items-center gap-2 rounded-md p-3 hover:bg-gray-100 relative\"\n      role=\"checkbox\"\n      aria-checked={todo.completed}\n    >\n      <motion.input\n        type=\"checkbox\"\n        checked={todo.completed}\n        readOnly\n        className=\"h-4 w-4 rounded-2xl cursor-pointer accent-gray-500\"\n      />\n      <span\n        className={`relative ${\n          todo.completed ? \"text-gray-300\" : color\n        } whitespace-nowrap`}\n      >\n        {todo.title}\n        {shouldShowSpiral && <SPIRAL_SVG duration={duration} />}\n      </span>\n    </motion.button>\n  );\n};\n\nconst SPIRAL_SVG = ({\n  duration,\n  className,\n}: {\n  duration: number;\n  className?: string;\n}) => (\n  <motion.svg\n    xmlns=\"http://www.w3.org/2000/svg\"\n    viewBox=\"-5 0 115 20\"\n    className=\"absolute left-0 bottom-0 w-full h-[1.2em] pointer-events-none\"\n  >\n    <motion.path\n      d={SVG_PATH}\n      fill=\"none\"\n      stroke=\"currentColor\"\n      strokeWidth=\"2\"\n      strokeLinecap=\"round\"\n      strokeDasharray=\"300\"\n      initial={{ strokeDashoffset: 300 }}\n      animate={{ strokeDashoffset: 0 }}\n      transition={{ duration, ease: \"easeInOut\" }}\n    />\n  </motion.svg>\n);\n\nexport default CoolTodo;",
+      "installCommands": "npm i clsx tailwind-merge motion",
+      "utilsCode": "import { ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}",
+      "sourceCode": "components/ui/cool-todo.tsx",
+      "props": [
+        {
+          "prop": "todos",
+          "type": "TodoItem[]",
+          "required": true,
+          "default": "-",
+          "description": "An array of todo items to display in the list"
+        },
+        {
+          "prop": "speed",
+          "type": "'normal' | 'medium' | 'fast'",
+          "required": false,
+          "default": "'normal'",
+          "description": "The speed of the animation"
+        },
+        {
+          "prop": "fontStyle",
+          "type": "string",
+          "required": false,
+          "default": "'font-mono'",
+          "description": "The font style of the todo items"
+        },
+        {
+          "prop": "color",
+          "type": "string",
+          "required": false,
+          "default": "'text-neutral-700'",
+          "description": "The color of the todo items"
+        }
+      ],
+      "demoData": {
+        "todos": [
+          { "id": 1, "title": "Finish  project", "completed": false },
+          { "id": 2, "title": "Read docs", "completed": true },
+          { "id": 3, "title": "Workout ", "completed": false }
+        ]
+      }
+    },
+    "fly-testimonial": {
+      "title": "Fly Testimonial",
+      "description": "A card component with a fly testimonial animation.",
+      "tags": ["testimonial", "cards"],
+      "code": "import React, { useState } from \"react\";\nimport { motion } from \"motion/react\";\nimport { ArrowLeft, ArrowRight } from \"lucide-react\";\n\nconst reviewers = [\n  {\n    id: 1,\n    name: \"Mr. Abhishek\",\n    avatar: \"https://i.pravatar.cc/150?img=9\",\n    review:\n      \"TodlerrUI is super clean and minimal, exactly what I needed for my projects.\",\n  },\n  {\n    id: 2,\n    name: \"Mrs Jane\",\n    avatar: \"https://i.pravatar.cc/150?img=6\",\n    review:\n      \"I love how smooth and modern the components feel, saves me so much time.\",\n  },\n  {\n    id: 3,\n    name: \"Mr. Dev\",\n    avatar: \"https://i.pravatar.cc/150?img=7\",\n    review:\n      \"Integration was effortless, and the UI looks professional out of the box.\",\n  },\n  {\n    id: 4,\n    name: \"Mr. Arora\",\n    avatar: \"https://i.pravatar.cc/150?img=8\",\n    review:\n      \"TodlerrUI helped me ship faster without compromising on design quality.\",\n  },\n];\n\nconst speedMap = {\n  slow: 1.2,\n  normal: 0.8,\n  medium: 0.5,\n  fast: 0.3,\n};\n\ninterface TestimonialProps {\n  className?: string;\n  font?: string;\n  speed?: \"slow\" | \"normal\" | \"medium\" | \"fast\";\n}\n\nfunction FlyTestimonial({\n  className = \"\",\n  font = \"font-serif\",\n  speed = \"normal\",\n}: TestimonialProps) {\n  const [activeIndex, setActiveIndex] = useState(0);\n  const [flyDirection, setFlyDirection] = useState(null as string | null);\n\n  const animationSpeed = speedMap[speed] ?? speedMap.normal;\n\n  const handleFly = (direction: string) => {\n    setFlyDirection(direction);\n\n    setTimeout(() => {\n      setActiveIndex((prev) => (prev + 1) % reviewers.length);\n      setFlyDirection(null);\n    }, animationSpeed * 1000);\n  };\n\n  return (\n    <div className={`h-auto flex flex-col items-center justify-center ${className} ${font}`}>\n      <div className=\"relative w-56 h-auto\">\n        {reviewers.map((reviewer, index) => {\n          const isActive = index === activeIndex;\n\n          return (\n            <motion.div\n              key={reviewer.id}\n              drag\n              dragConstraints={{ left: -120, right: 120, top: -100, bottom: 10 }}\n              animate={\n                isActive && flyDirection === \"left\"\n                  ? { x: -300, opacity: 0, rotate: -20 }\n                  : isActive && flyDirection === \"right\"\n                  ? { x: 300, opacity: 0, rotate: 20 }\n                  : { x: 0, opacity: 1, rotate: index === 0 ? 6 : 7 }\n              }\n              transition={{ duration: animationSpeed, ease: \"easeInOut\" }}\n              className={`absolute top-0 left-0 flex flex-col items-start justify-center h-auto w-56 border border-pink-900 bg-[#f7f7f7e2] pt-4 ${isActive ? \"z-20\" : \"z-10\"}`}\n            >\n              <h2 className=\"font-mono font-medium text-md px-4 flex items-center -tracking-normal\">\n                <img\n                  className=\"w-8 h-8 rounded-[2px] mr-2\"\n                  src={reviewer.avatar}\n                  alt=\"avatar\"\n                />\n                {reviewer.name}\n              </h2>\n              <p className=\"px-4 py-3 flex-1 text-md font-semibold\">\n                \"{reviewer.review}\"\n              </p>\n            </motion.div>\n          );\n        })}\n\n        <TestimonialButtons\n          onLeftClick={() => handleFly(\"left\")}\n          onRightClick={() => handleFly(\"right\")}\n        />\n      </div>\n    </div>\n  );\n}\n\nfunction TestimonialButtons({\n  onLeftClick,\n  onRightClick,\n}: {\n  onLeftClick: React.MouseEventHandler<HTMLButtonElement>;\n  onRightClick: React.MouseEventHandler<HTMLButtonElement>;\n}) {\n  return (\n    <div className=\"flex items-center justify-center px-2 py-1 rounded-lg gap-16 mt-48\">\n      <ArrowLeft\n        onClick={onLeftClick}\n        className=\"text-3xl cursor-pointer bg-slate-200\"\n      />\n      <ArrowRight\n        onClick={onRightClick}\n        className=\"text-3xl cursor-pointer bg-slate-200\"\n      />\n    </div>\n  );\n}\n\nexport default FlyTestimonial;",
+      "installCommands": "npm i clsx tailwind-merge motion lucide-react",
+      "utilsCode": "import { ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}",
+      "sourceCode": "components/ui/fly-testimonial.tsx",
+      "props": [
+        {
+          "prop": "className",
+          "type": "string | undefined",
+          "required": false,
+          "default": "undefined",
+          "description": "Additional CSS classes to apply to the component"
+        },
+        {
+          "prop": "font",
+          "type": "string",
+          "required": false,
+          "default": "'font-serif'",
+          "description": "The font style of the component"
+        },
+        {
+          "prop": "speed",
+          "type": "'slow' | 'normal' | 'medium' | 'fast'",
+          "required": false,
+          "default": "'normal'",
+          "description": "The speed of the animation"
+        }
+      ],
+      "demoData": {
+        "font": "font-serif",
+        "speed": "normal"
+      }
+    },
+    "orbit-animation": {
+      "title": "Orbit Animation",
+      "description": "A simple orbit animation component.",
+      "tags": ["orbit", "motion"],
+      "code": "export default function OrbitAnimation() {\n  return (\n    <div className=\"flex items-center justify-center h-screen \">\n      {/* Center text */}\n      <div className=\"relative w-[300px] h-[300px] flex items-center justify-center\">\n        <div className=\"text-md font-bold bg-neutral-200 text-black rounded-full px-2 py-1\">\n          ui.todlerr.fun\n        </div>\n\n        {/* Orbit 1 */}\n        <div className=\"absolute w-[200px] h-[200px] rounded-full border border-gray-200 animate-spin-slow\">\n          <div className=\"absolute -top-5 left-1/2 -translate-x-1/2 rotate-0\">\n            <img\n              src=\"https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_20_2x.png\"\n              alt=\"Google Calendar\"\n              className=\"w-10 h-10 rounded-full shadow-md\"\n            />\n          </div>\n        </div>\n\n        {/* Orbit 2 (rotated 120° start) */}\n        <div className=\"absolute w-[250px] h-[250px] rounded-full border border-gray-200 animate-spin-reverse\">\n          <div className=\"absolute -top-5 left-1/2 -translate-x-1/2 rotate-[120deg] origin-[50%_150px]\">\n            <img\n              src=\"https://tailwindcss.com/_next/static/media/tailwindcss-mark.d52e9897.svg\"\n              alt=\"Tailwind CSS\"\n              className=\"w-10 h-10 rounded-full shadow-md\"\n            />\n          </div>\n        </div>\n\n        {/* Orbit 3 (rotated 240° start) */}\n        <div className=\"absolute w-[300px] h-[300px] rounded-full border border-gray-200 animate-spin-slow\">\n          <div className=\"absolute -top-5 left-1/2 -translate-x-1/2 rotate-[240deg] origin-[50%_175px]\">\n            <img\n              src=\"https://img.icons8.com/fluent-systems-filled/512/nextjs.png\"\n              alt=\"Next.js\"\n              className=\"w-10 h-10 rounded-full shadow-md\"\n            />\n          </div>\n        </div>\n      </div>\n    </div>\n  );\n}",
+      "installCommands": "npm i clsx tailwind-merge",
+      "utilsCode": "import { ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}",
+      "sourceCode": "components/ui/orbit-animation.tsx",
+      "props": [
+        {
+          "prop": "className",
+          "type": "string | undefined",
+          "required": false,
+          "default": "undefined",
+          "description": "Additional CSS classes to apply to the component"
+        }
+      ],
+      "demoData": {}
+    },
+    "card-split-menu": {
+      "title": "Card Split Menu",
+      "description": "A menu component with a card split animation.",
+      "tags": ["menu", "split", "radial"],
+      "code": "import { motion, AnimatePresence, MotionConfig } from \"motion/react\";\nimport { useState, useEffect, useId } from \"react\";\nimport { X, Menu } from \"lucide-react\";\n\nexport interface MenuItem {\n  icon: React.ReactElement;\n  name?: string;\n  metadata?: any;\n  value?: any;\n}\n\ninterface CardSplitMenuProps {\n  items: MenuItem[];\n  className?: string;\n  onChange?: (item: MenuItem) => void;\n  direction?: \"left\" | \"right\" | \"top\" | \"bottom\";\n  autoTrigger?: boolean;\n  openDelay?: number;\n  closeDelay?: number;\n  repeat?: boolean;\n}\n\nfunction CardSplitMenu({\n  items,\n  className = \"\",\n  onChange,\n  direction = \"top\",\n  autoTrigger = true,\n  openDelay = 1000,\n  closeDelay = 3000,\n  repeat = false,\n}: CardSplitMenuProps) {\n  const [open, setOpen] = useState(false);\n  const id = useId();\n\n  function handleClick(item: MenuItem) {\n    setOpen(false);\n    onChange?.(item);\n  }\n\n  useEffect(() => {\n    const handleKeyDown = (event: KeyboardEvent) => {\n      if (event.key === \"Escape\") setOpen(false);\n    };\n    window.addEventListener(\"keydown\", handleKeyDown);\n    return () => {\n      window.removeEventListener(\"keydown\", handleKeyDown);\n    };\n  }, []);\n\n  useEffect(() => {\n    if (!autoTrigger) return;\n\n    let openTimeout: NodeJS.Timeout;\n    let closeTimeout: NodeJS.Timeout;\n\n    const triggerCycle = () => {\n      openTimeout = setTimeout(() => setOpen(true), openDelay);\n      closeTimeout = setTimeout(() => {\n        setOpen(false);\n        if (repeat) triggerCycle();\n      }, openDelay + closeDelay);\n    };\n\n    triggerCycle();\n\n    return () => {\n      clearTimeout(openTimeout);\n      clearTimeout(closeTimeout);\n    };\n  }, [autoTrigger, openDelay, closeDelay, repeat]);\n\n  const getCardPosition = (index: number) => {\n    const spacing = 60;\n    const offset = 20;\n\n    switch (direction) {\n      case \"top\":\n        return { y: -(spacing * (index + 1) + offset), x: 0 };\n      case \"bottom\":\n        return { y: spacing * (index + 1) + offset, x: 0 };\n      case \"left\":\n        return { x: -(spacing * (index + 1) + offset), y: 0 };\n      case \"right\":\n        return { x: spacing * (index + 1) + offset, y: 0 };\n      default:\n        return { x: 0, y: 0 };\n    }\n  };\n\n  const menuId = `card-split-menu-${id}`;\n\n  return (\n    <MotionConfig transition={{ type: \"spring\", duration: 0.4, bounce: 0.2 }}>\n      <div className=\"relative\">\n        <div\n          id={menuId}\n          role=\"menu\"\n          aria-hidden={!open}\n          className=\"absolute top-0 left-0\"\n        >\n          <div className=\"relative w-12 h-12\">\n            <AnimatePresence>\n              {open &&\n                items.map((item, index) => {\n                  const position = getCardPosition(index);\n                  return (\n                    <motion.button\n                      key={index}\n                      aria-label={item.name}\n                      tabIndex={open ? 0 : -1}\n                      role=\"menuitem\"\n                      initial={{ x: 0, y: 0, scale: 0.8, opacity: 0, rotate: 0 }}\n                      animate={{ x: position.x, y: position.y, scale: 1, opacity: 1, rotate: 0 }}\n                      exit={{ x: 0, y: 0, scale: 0.8, opacity: 0, rotate: 180 }}\n                      transition={{ delay: index * 0.05, type: \"spring\", duration: 0.4, bounce: 0.3 }}\n                      className=\"absolute inset-0 flex w-12 h-12 cursor-pointer items-center justify-center rounded-xl bg-white shadow-lg border border-gray-200 text-gray-700 hover:bg-gray-50 hover:shadow-xl hover:scale-110 transition-all duration-200\"\n                      onClick={() => handleClick(item)}\n                      whileHover={{ scale: 1.1 }}\n                      whileTap={{ scale: 0.95 }}\n                    >\n                      {item.icon}\n                      <span className=\"sr-only\">{item.name}</span>\n                    </motion.button>\n                  );\n                })}\n            </AnimatePresence>\n          </div>\n        </div>\n\n        <motion.button\n          className={`relative z-10 flex w-12 h-12 cursor-pointer items-center justify-center rounded-xl bg-gray-900 text-white shadow-lg hover:bg-gray-800 transition-colors ${className}`}\n          onClick={() => setOpen(!open)}\n          aria-haspopup=\"true\"\n          aria-expanded={open}\n          aria-controls={menuId}\n          aria-label={open ? \"Close menu\" : \"Open menu\"}\n          whileHover={{ scale: 1.05 }}\n          whileTap={{ scale: 0.95 }}\n        >\n          <AnimatePresence mode=\"wait\" initial={false}>\n            <motion.span\n              key={open ? \"close\" : \"open\"}\n              initial={{ opacity: 0, rotate: -90 }}\n              animate={{ opacity: 1, rotate: 0 }}\n              exit={{ opacity: 0, rotate: 90 }}\n              transition={{ duration: 0.2 }}\n            >\n              {open ? <X size={20} /> : <Menu size={20} />}\n            </motion.span>\n          </AnimatePresence>\n        </motion.button>\n      </div>\n    </MotionConfig>\n  );\n}\n\nexport default CardSplitMenu;",
+      "installCommands": "npm i clsx tailwind-merge motion lucide-react",
+      "utilsCode": "import { ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}",
+      "sourceCode": "components/ui/card-split-menu.tsx",
+      "props": [
+        {
+          "prop": "className",
+          "type": "string | undefined",
+          "required": false,
+          "default": "undefined",
+          "description": "Additional CSS classes to apply to the component"
+        },
+        {
+          "prop": "items",
+          "type": "MenuItem[]",
+          "required": true,
+          "default": "-",
+          "description": "An array of menu items to display in the menu"
+        },
+        {
+          "prop": "onChange",
+          "type": "(item: MenuItem) => void",
+          "required": false,
+          "default": "undefined",
+          "description": "Callback fired when a menu item is clicked"
+        },
+        {
+          "prop": "direction",
+          "type": "\"left\" | \"right\" | \"top\" | \"bottom\"",
+          "required": false,
+          "default": "\"top\"",
+          "description": "Direction in which menu cards will expand"
+        },
+        {
+          "prop": "autoTrigger",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Whether the menu should auto-open/close on a timed cycle"
+        },
+        {
+          "prop": "openDelay",
+          "type": "number",
+          "required": false,
+          "default": "1000",
+          "description": "Delay before auto-open in milliseconds"
+        },
+        {
+          "prop": "closeDelay",
+          "type": "number",
+          "required": false,
+          "default": "3000",
+          "description": "Delay before auto-close in milliseconds"
+        },
+        {
+          "prop": "repeat",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Whether the auto-open/close cycle should repeat"
+        }
+      ],
+      "demoData": {
+        "items": [
+          {
+            "icon": "Home",
+            "name": "Menu Item 1"
+          },
+          {
+            "icon": "Settings",
+            "name": "Menu Item 2"
+          }
+        ]
+      }
+    },
+    "cookie-card": {
+      "title": "Cookie Card",
+      "description": "A cookie consent banner component.",
+      "tags": ["cookie", "banner"],
+      "code": "import { AnimatePresence, motion, MotionConfig } from \"motion/react\";\nimport { useState } from \"react\";\n\ntype Speed = \"slow\" | \"normal\" | \"medium\" | \"rocket\";\ntype Placement = \"bottom-left\" | \"bottom-right\" | \"top-left\" | \"top-right\";\n\ninterface CookieCardProps {\n  heading?: string;\n  message?: string;\n  acceptText?: string;\n  rejectText?: string;\n  speed?: Speed;\n  placement?: Placement;\n  className?: string;\n  fontClassName?: string;\n}\n\nconst variantsMap: Record<Placement, any> = {\n  \"bottom-left\": { hidden: { x: -200, y: 0, opacity: 0, scale: 0.8 }, visible: { x: 0, y: 0, opacity: 1, scale: 1 } },\n  \"bottom-right\": { hidden: { x: 200, y: 0, opacity: 0, scale: 0.8 }, visible: { x: 0, y: 0, opacity: 1, scale: 1 } },\n  \"top-left\": { hidden: { x: -200, y: 0, opacity: 0, scale: 0.8 }, visible: { x: 0, y: 0, opacity: 1, scale: 1 } },\n  \"top-right\": { hidden: { x: 200, y: 0, opacity: 0, scale: 0.8 }, visible: { x: 0, y: 0, opacity: 1, scale: 1 } },\n};\n\nfunction CookieCard({\n  heading = \"Yes, we use cookies 🍪\",\n  message = \"Our cookies don't predict the future, but they do help us remember you!\",\n  acceptText = \"Accept Cookies\",\n  rejectText = \"Manage Preferences\",\n  speed = \"normal\",\n  placement = \"top-left\",\n  className = \"\",\n  fontClassName = \"\",\n}: CookieCardProps) {\n  const [visible, setVisible] = useState(true);\n\n  const speedMap: Record<Speed, number> = { slow: 1.2, normal: 0.8, medium: 0.6, rocket: 0.3 };\n  const placementMap: Record<Placement, string> = { \"bottom-left\": \"bottom-6 left-6\", \"bottom-right\": \"bottom-6 right-6\", \"top-left\": \"top-6 left-6\", \"top-right\": \"top-6 right-6\" };\n\n  return (\n    <AnimatePresence>\n      {visible && (\n        <MotionConfig transition={{ type: \"spring\", stiffness: 120, damping: 14, bounce: 0.05, ease: \"easeInOut\", duration: speedMap[speed] }}>\n          <motion.div\n            initial=\"hidden\"\n            animate=\"visible\"\n            exit=\"hidden\"\n            variants={variantsMap[placement]}\n            drag=\"x\"\n            dragConstraints={{ left: 5, right: 5 }}\n            className={`fixed w-[380px] max-w-sm px-6 py-5 bg-white rounded-lg border border-neutral-200 shadow-2xl shadow-black/5 ${placementMap[placement]} ${className}`}\n          >\n            <motion.h2\n              variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}\n              transition={{ delay: 0.1, type: \"spring\", stiffness: 100, damping: 12 }}\n              className={`text-neutral-800 text-left text-xl ${fontClassName}`}\n            >\n              {heading}\n            </motion.h2>\n\n            <Buttons\n              message={message}\n              acceptText={acceptText}\n              rejectText={rejectText}\n              onAccept={() => setVisible(false)}\n              onReject={() => setVisible(false)}\n              fontClassName={fontClassName}\n            />\n          </motion.div>\n        </MotionConfig>\n      )}\n    </AnimatePresence>\n  );\n}\n\nexport default CookieCard;\n\nfunction Buttons({ message, acceptText, rejectText, onAccept, onReject, fontClassName = \"\" }: { message: string; acceptText: string; rejectText: string; onAccept: () => void; onReject: () => void; fontClassName?: string }) {\n  const [status, setStatus] = useState<null | \"accepted\" | \"rejected\">(null);\n\n  return (\n    <motion.div>\n      <AnimatePresence mode=\"wait\">\n        {!status ? (\n          <motion.div key=\"buttons\" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>\n            <motion.p transition={{ type: \"spring\", stiffness: 80, damping: 15, delay: 0.3 }} className={`text-neutral-600 text-sm leading-relaxed mb-4 ${fontClassName}`}>{message}</motion.p>\n\n            <div className=\"flex flex-wrap gap-3 p-2 text-sm\">\n              <button onClick={() => { onAccept(); setStatus(\"accepted\"); }} className=\"bg-blue-600 hover:bg-blue-700 border border-blue-600 text-white font-medium rounded-full px-3 py-2 shadow-sm transition-colors cursor-pointer\">{acceptText}</button>\n\n              <button onClick={() => { onReject(); setStatus(\"rejected\"); }} className=\"bg-transparent hover:bg-gray-100 text-gray-800 font-medium rounded-full px-3 py-2 border border-gray-300 shadow-sm transition-colors cursor-pointer\">{rejectText}</button>\n            </div>\n          </motion.div>\n        ) : (\n          <motion.div key=\"status\" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className=\"text-center text-sm font-medium text-green-600\">\n            {status === \"accepted\" ? \"🍪 Cookies Accepted!\" : \"⚙️ Preferences Updated!\"}\n          </motion.div>\n        )}\n      </AnimatePresence>\n    </motion.div>\n  );\n}",
+      "installCommands": "npm i clsx tailwind-merge motion",
+      "utilsCode": "import { ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}",
+      "sourceCode": "components/ui/cookie-card.tsx",
+      "props": [
+        { "prop": "className", "type": "string | undefined", "required": false, "default": "undefined", "description": "Additional CSS classes to apply to the component" },
+        { "prop": "heading", "type": "string", "required": false, "default": "'Yes, we use cookies 🍪'", "description": "The heading of the cookie card" },
+        { "prop": "message", "type": "string", "required": false, "default": "'Our cookies don't predict the future, but they do help us remember you!'", "description": "The message of the cookie card" },
+        { "prop": "acceptText", "type": "string", "required": false, "default": "'Accept Cookies'", "description": "The text for the accept button" },
+        { "prop": "rejectText", "type": "string", "required": false, "default": "'Manage Preferences'", "description": "The text for the reject button" },
+        { "prop": "speed", "type": "'slow' | 'normal' | 'medium' | 'rocket'", "required": false, "default": "'normal'", "description": "The speed of the animation" },
+        { "prop": "placement", "type": "'bottom-left' | 'bottom-right' | 'top-left' | 'top-right'", "required": false, "default": "'top-left'", "description": "The placement of the cookie card" },
+        { "prop": "fontClassName", "type": "string", "required": false, "default": "''", "description": "The font style of the cookie card" }
+      ],
+      "demoData": {
+        "heading": "Yes, we use cookies 🍪",
+        "message": "Our cookies don't predict the future, but they do help us remember you!",
+        "acceptText": "Accept Cookies",
+        "rejectText": "Manage Preferences",
+        "speed": "normal",
+        "placement": "top-left",
+        "fontClassName": ""
+      }
+    },
+    "feature-cards": {
+      "title": "Feature Cards",
+      "description": "A grid of feature cards with customizable content.",
+      "tags": ["features", "grid"],
+      "code": "\"use client\";\n\nimport { useState } from \"react\";\nimport { motion, AnimatePresence, TargetAndTransition } from \"motion/react\";\n\nexport interface Feature { id: number | string; title: string; description: string; iconUrl?: string; }\n\ninterface AnimatedCirclesProps { floating?: boolean; colors?: string[]; size?: number; }\nconst AnimatedCircles = ({ floating, colors = [\"#F472B6\", \"#A78BFA\", \"#FACC15\", \"#4ADE80\"], size = 8 }: AnimatedCirclesProps) => {\n  const circleVariants: Record<string, TargetAndTransition> = { initial: { scale: 0, opacity: 0 }, animate: { scale: 1, opacity: 1, transition: { type: \"spring\", stiffness: 260, damping: 20 } } };\n  const floatingTransition: TargetAndTransition = { y: floating ? [0, -4, 0] : 0, x: floating ? [0, 3, 0] : 0, transition: floating ? { repeat: Infinity, repeatType: \"mirror\", duration: 2 } : { duration: 0 } };\n  const positions = [\"top-4 left-4\", \"top-4 right-4\", \"bottom-4 left-4\", \"bottom-4 right-4\"];\n  return (<>{positions.map((pos, i) => (<motion.div key={i} className={`absolute ${pos} rounded-full shadow-inner`} style={{ width: size, height: size, backgroundColor: colors[i % colors.length] }} variants={circleVariants} transition={{ delay: 0.1 * (i + 1) }} animate={floatingTransition} />))}</>);\n};\n\ninterface FeatureCardProps { feature: Feature; size?: { width?: string; height?: string }; hoverBgColor?: string; floatingCircles?: boolean; }\nconst FeatureCard = ({ feature, size = { width: \"w-full\", height: \"h-64\" }, hoverBgColor = \"#FEF3C7\", floatingCircles = true }: FeatureCardProps) => {\n  const [isHovered, setIsHovered] = useState(false);\n  return (<motion.div className={`relative flex flex-col items-center justify-center p-6 border border-gray-200 rounded-2xl bg-white shadow-lg ${size.width} ${size.height}`} onHoverStart={() => setIsHovered(true)} onHoverEnd={() => setIsHovered(false)} animate={{ scale: isHovered ? 1.06 : 1, rotateX: isHovered ? -6 : 0, rotateY: isHovered ? 6 : 0, boxShadow: isHovered ? \"rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset\" : \"0 10px 20px rgba(0,0,0,0.1)\", backgroundColor: isHovered ? hoverBgColor : \"#FFFFFF\" }} transition={{ type: \"spring\", stiffness: 180, damping: 14, mass: 0.8 }} style={{ perspective: 1200 }}>\n    <motion.div className=\"flex flex-col items-center justify-center space-y-4 absolute inset-0\" animate={{ opacity: isHovered ? 0 : 1, y: isHovered ? -20 : 0 }} transition={{ duration: 0.25, ease: \"easeOut\" }}>\n      <motion.div className=\"flex items-center justify-center w-12 h-12 p-2 bg-gray-100 rounded-xl shadow-sm\" whileHover={{ scale: 1.1, rotate: [0, 5, -5, 0] }} transition={{ duration: 0.4 }}>\n        <img src={feature.iconUrl} alt={feature.title} className=\"w-8 h-8\" />\n      </motion.div>\n      <h3 className=\"text-gray-900 text-md font-semibold text-center\">{feature.title}</h3>\n    </motion.div>\n    <motion.div className=\"flex flex-col items-center justify-center space-y-2 p-6 absolute inset-0\" animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }} transition={{ duration: 0.25, ease: \"easeOut\" }}>\n      <motion.h3 className=\"text-gray-900 text-md font-semibold text-center\" initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.05, duration: 0.3 }}>{feature.title}</motion.h3>\n      <motion.p className=\"text-gray-600 text-center text-xm\" initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1, duration: 0.3 }}>{feature.description}</motion.p>\n      <AnimatedCircles floating={isHovered && floatingCircles} />\n    </motion.div>\n  </motion.div>);\n};\n\ninterface FeaturesGridProps { featuresArray?: Feature[]; cardSize?: { width?: string; height?: string }; hoverBgColor?: string; floatingCircles?: boolean; }\nconst FeaturesGrid = ({ featuresArray, cardSize, hoverBgColor, floatingCircles = true }: FeaturesGridProps) => (\n  <div className=\"flex flex-col items-center p-8\">\n    <div className=\"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl w-full\">\n      {featuresArray?.map((feature) => (<FeatureCard key={feature.id} feature={feature} size={cardSize} hoverBgColor={hoverBgColor} floatingCircles={floatingCircles} />))}\n    </div>\n  </div>\n);\n\nexport default FeaturesGrid;",
+      "installCommands": "npm i clsx tailwind-merge motion",
+      "utilsCode": "import { ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}",
+      "sourceCode": "components/ui/feature-cards.tsx",
+      "props": [
+        { "prop": "className", "type": "string | undefined", "required": false, "default": "undefined", "description": "Additional CSS classes to apply to the component" },
+        { "prop": "featuresArray", "type": "FeatureItem[]", "required": true, "default": "-", "description": "An array of feature items to display in the grid" }
+      ],
+      "demoData": {
+        "featuresArray": [
+          {
+            "id": 1,
+            "title": "Fast Performance",
+            "description": "Lightning-fast components built for modern web applications",
+            "iconUrl": "https://img.icons8.com/fluent/48/000000/speed.png"
+          }
+        ]
+      }
+    },
+    "text-animations": {
+      "title": "Text Animation",
+      "description": "A collection of text animations with customizable speed and font style.",
+      "tags": ["text", "animation", "rotate"],
+      "code": "\"use client\";\n\nimport * as React from \"react\";\nimport { AnimatePresence, motion, type Transition } from \"motion/react\";\nimport { cn } from \"@/lib/utils\";\n\ntype RotatingTextProps = {\n  text: string[];\n  duration?: number;\n  transition?: Transition;\n  containerClassName?: string;\n};\n\nexport function FunRotatingText({\n  text,\n  duration = 2000,\n  transition = { duration: 0.5, ease: \"easeOut\" },\n  containerClassName,\n}: RotatingTextProps) {\n  const [index, setIndex] = React.useState(0);\n\n  React.useEffect(() => {\n    const interval = setInterval(() => {\n      setIndex((prevIndex) => (prevIndex + 1) % text.length);\n    }, duration);\n    return () => clearInterval(interval);\n  }, [text, duration]);\n\n  const currentText = text[index];\n\n  return (\n    <div className={cn(\"overflow-hidden h-10 flex items-center justify-center\", containerClassName)}>\n      <AnimatePresence mode=\"wait\">\n        <motion.div\n          key={currentText}\n          initial={{ opacity: 0, y: 20, rotate: -10, scale: 0.9 }}\n          animate={{ opacity: 1, y: 0, rotate: 0, scale: 1 }}\n          exit={{ opacity: 0, y: -20, rotate: 10, scale: 0.9 }}\n          transition={transition}\n          className=\"text-lg font-bold bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-950 bg-clip-text text-transparent drop-shadow-sm\"\n        >\n          {currentText}\n        </motion.div>\n      </AnimatePresence>\n    </div>\n  );\n}",
+      "installCommands": "npm i clsx tailwind-merge motion",
+      "utilsCode": "import { ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}",
+      "sourceCode": "components/ui/text-animations.tsx",
+      "props": [
+        { "prop": "text", "type": "string[]", "required": true, "default": "-", "description": "An array of text strings to animate" },
+        { "prop": "speed", "type": "'slow' | 'normal' | 'medium' | 'fast'", "required": false, "default": "'normal'", "description": "The speed of the animation" },
+        { "prop": "fontStyle", "type": "string", "required": false, "default": "'font-mono'", "description": "The font style of the text" }
+      ],
+      "demoData": {
+        "text": ["Playful Animations", "Made by Todlerr", "Nothing Fancy"],
+        "speed": "normal",
+        "fontStyle": "font-mono"
+      }
+    },
+    "sparkle-button": {
+      "title": "Sparkle Button",
+      "description": "A button component with a sparkle animation.",
+      "tags": ["button", "sparkle"],
+      "code": "\"use client\";\n\nimport { motion } from \"motion/react\";\nimport { useState } from \"react\";\n\nfunction SparkleButton({ text = \"Hover Me\" }) {\n  const [hovered, setHovered] = useState(false);\n\n  const sparkles = [\n    { x: -40, y: -10 },\n    { x: 50, y: -20 },\n    { x: -20, y: 40 },\n    { x: 70, y: 30 },\n  ];\n\n  return (\n    <div\n      className=\"relative inline-block\"\n      onMouseEnter={() => setHovered(true)}\n      onMouseLeave={() => setHovered(false)}\n    >\n      <motion.button\n        className=\"px-6 py-2 cursor-pointer rounded-md border-2 border-amber-400 text-amber-600 font-medium relative overflow-hidden perspective-dramatic\"\n        animate={{\n          boxShadow: hovered\n            ? \"0 0 20px rgba(251, 191, 36, 1)\"\n            : \"0 0 0px rgba(251, 191, 36, 0)\",\n        }}\n        transition={{ duration: 0.3 }}\n        whileHover={{ y: hovered ? -10 : 0, x: 0 }}\n      >\n        {text}\n      </motion.button>\n      <div className=\"absolute inset-x-0 -bottom-px h-px w-full bg-red-500 bg-gradient-to-r from transparent via-sky-600 to transparent\" />\n\n      {sparkles.map((s, i) => (\n        <motion.span\n          key={i}\n          className=\"absolute text-amber-900 pointer-events-none\"\n          style={{ left: s.x, top: s.y }}\n          animate={{\n            scale: hovered ? [0, 1.2, 0] : 0,\n            opacity: hovered ? [0, 1, 0] : 0,\n            rotate: [0, 360],\n          }}\n          transition={{\n            repeat: hovered ? Infinity : 0,\n            duration: 1.5,\n            delay: i * 0.3,\n          }}\n        >\n          ✦\n        </motion.span>\n      ))}\n    </div>\n  );\n}\n\nexport default SparkleButton;",
+      "installCommands": "npm i clsx tailwind-merge motion",
+      "utilsCode": "import { ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}",
+      "sourceCode": "components/ui/sparkle-button.tsx",
+      "props": [
+        { "prop": "text", "type": "string", "required": false, "default": "'Hover Me'", "description": "The text to display on the button" },
+        { "prop": "fontStyle", "type": "string", "required": false, "default": "'font-semibold'", "description": "The font style of the button text" }
+      ],
+      "demoData": { "text": "Hover Me", "fontStyle": "font-semibold" }
+    },
+    "animated-testimonials": {
+      "title": "Animated Testimonials",
+      "description": "Beautiful testimonials with smooth animations and transitions.",
+      "tags": ["testimonial", "animation"],
+      "code": "\"use client\";\n\nimport { ArrowLeft, ArrowRight } from \"lucide-react\";\nimport { useEffect, useState } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\ntype Testimonial = {\n  quote: string;\n  name: string;\n  designation: string;\n  src: string;\n};\n\nexport const AnimatedTestimonials = ({\n  testimonials,\n  autoplay = false,\n}: {\n  testimonials: Testimonial[];\n  autoplay?: boolean;\n}) => {\n  const [active, setActive] = useState(0);\n  const [isClient, setIsClient] = useState(false);\n  const [rotations, setRotations] = useState<number[]>([]);\n\n  useEffect(() => {\n    setIsClient(true);\n    setRotations(testimonials.map(() => Math.floor(Math.random() * 21) - 10));\n  }, [testimonials]);\n\n  const handleNext = () => {\n    setActive((prev) => (prev + 1) % testimonials.length);\n  };\n\n  const handlePrev = () => {\n    setActive((prev) => (prev - 1 + testimonials.length) % testimonials.length);\n  };\n\n  const isActive = (index: number) => {\n    return index === active;\n  };\n\n  useEffect(() => {\n    if (autoplay) {\n      const interval = setInterval(handleNext, 5000);\n      return () => clearInterval(interval);\n    }\n  }, [autoplay]);\n\n  if (!isClient) {\n    return (\n      <div className=\"mx-auto max-w-sm px-4 py-20 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12\">\n        <div className=\"relative grid grid-cols-1 gap-20 md:grid-cols-2\">\n          <div className=\"relative h-80 w-full bg-gray-100 rounded-3xl animate-pulse\" />\n          <div className=\"flex flex-col justify-between py-4\">\n            <div className=\"space-y-4\">\n              <div className=\"h-8 bg-gray-100 rounded animate-pulse\" />\n              <div className=\"h-4 bg-gray-100 rounded animate-pulse\" />\n              <div className=\"h-20 bg-gray-100 rounded animate-pulse\" />\n            </div>\n          </div>\n        </div>\n      </div>\n    );\n  }\n\n  return (\n    <div className=\"mx-auto max-w-sm px-4 py-20 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12\">\n      <div className=\"relative grid grid-cols-1 gap-20 md:grid-cols-2\">\n        <div>\n          <div className=\"relative h-80 w-full\">\n            {testimonials.map((testimonial, index) => (\n              <div\n                key={testimonial.src}\n                className={cn(\n                  \"absolute inset-0 transition-all duration-500 ease-in-out origin-bottom\",\n                  isActive(index)\n                    ? \"opacity-100 scale-100 z-40 rotate-0\"\n                    : \"opacity-70 scale-95 z-10\"\n                )}\n                style={{\n                  transform: isActive(index)\n                    ? \"translateZ(0px) scale(1) rotate(0deg)\"\n                    : `translateZ(-100px) scale(0.95) rotate(${rotations[index] || 0}deg)`,\n                  zIndex: isActive(index)\n                    ? 40\n                    : testimonials.length + 2 - index,\n                }}\n              >\n                <img\n                  src={testimonial.src}\n                  alt={testimonial.name}\n                  width={500}\n                  height={500}\n                  draggable={false}\n                  className=\"h-full w-full rounded-3xl object-cover object-center\"\n                />\n              </div>\n            ))}\n          </div>\n        </div>\n        <div className=\"flex flex-col justify-between py-4\">\n          <div\n            key={active}\n            className=\"animate-in fade-in slide-in-from-bottom-4 duration-300\"\n          >\n            <h3 className=\"text-2xl font-bold text-amber-900\">\n              {testimonials[active].name}\n            </h3>\n            <p className=\"text-sm text-amber-600\">\n              {testimonials[active].designation}\n            </p>\n            <p className=\"mt-8 text-lg text-amber-700\">\n              {testimonials[active].quote.split(\" \").map((word, index) => (\n                <span\n                  key={index}\n                  className=\"inline-block animate-in fade-in slide-in-from-bottom-1 duration-200\"\n                  style={{\n                    animationDelay: `${index * 20}ms`,\n                  }}\n                >\n                  {word}&nbsp;\n                </span>\n              ))}\n            </p>\n          </div>\n          <div className=\"flex gap-4 pt-12 md:pt-0\">\n            <button\n              onClick={handlePrev}\n              className=\"group/button flex h-8 w-8 items-center justify-center rounded-full bg-amber-200 hover:bg-amber-300 transition-colors\"\n            >\n              <ArrowLeft className=\"h-4 w-4 text-amber-800 transition-transform duration-300 group-hover/button:rotate-12\" />\n            </button>\n            <button\n              onClick={handleNext}\n              className=\"group/button flex h-8 w-8 items-center justify-center rounded-full bg-amber-200 hover:bg-amber-300 transition-colors\"\n            >\n              <ArrowRight className=\"h-4 w-4 text-amber-800 transition-transform duration-300 group-hover/button:-rotate-12\" />\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  );\n};",
+      "installCommands": "npm i clsx tailwind-merge lucide-react",
+      "utilsCode": "import { ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}",
+      "sourceCode": "components/ui/animated-testimonials.tsx",
+      "props": [
+        {
+          "prop": "testimonials",
+          "type": "Testimonial[]",
+          "required": true,
+          "default": "-",
+          "description": "An array of testimonial objects containing quote, name, designation, and image src"
+        },
+        {
+          "prop": "autoplay",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Whether testimonials should automatically cycle through"
+        }
+      ],
+      "demoData": {
+        "testimonials": [
+          {
+            "quote": "This component library has transformed how I build interfaces. The animations are smooth and the code is clean.",
+            "name": "Sarah Chen",
+            "designation": "Frontend Developer",
+            "src": "https://images.unsplash.com/photo-1494790108755-2616b612b786?q=80&w=150&h=150&auto=format&fit=crop"
+          },
+          {
+            "quote": "I love how easy it is to integrate these components. They work perfectly with my existing design system.",
+            "name": "Michael Rodriguez",
+            "designation": "UI/UX Designer",
+            "src": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&h=150&auto=format&fit=crop"
+          },
+          {
+            "quote": "The attention to detail in these animations is incredible. My users love the smooth interactions.",
+            "name": "Emily Johnson",
+            "designation": "Product Manager",
+            "src": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&h=150&auto=format&fit=crop"
+          }
+        ]
+      }
+    }
+  }
+}
