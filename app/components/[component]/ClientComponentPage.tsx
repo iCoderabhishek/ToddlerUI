@@ -1,6 +1,5 @@
 "use client";
 
-import { notFound } from "next/navigation";
 import { Header } from "@/components/ui/header";
 import { Sidebar } from "@/components/ui/sidebar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -9,7 +8,7 @@ import { ComponentPreview } from "@/components/ui/component-preview";
 import { Monitor, Code, Package, Settings } from "lucide-react";
 import componentsData from "@/data/components.json";
 import { ComponentsData, PropData } from "@/types";
-import DynamicScrolland, { TOC_INTERFACE } from "@/components/DynamicScrolland";
+import { TOC_INTERFACE } from "@/components/DynamicScrolland";
 import { useState } from "react";
 import FeaturesGrid from "@/components/FeatureGrid";
 import FloatingSearch from "@/components/FloatingNav";

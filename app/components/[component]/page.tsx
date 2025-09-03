@@ -1,14 +1,8 @@
 import componentsData from "@/data/components.json";
-import { ComponentsData, PropData } from "@/types";
+import { ComponentsData } from "@/types";
 import ComponentClient from "./ClientComponentPage";
 
 const data = componentsData as ComponentsData;
-
-interface ComponentPageProps {
-  params: {
-    component: string;
-  };
-}
 
 export async function generateStaticParams() {
   return Object.keys(data.components).map((component) => ({
@@ -16,9 +10,13 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: ComponentPageProps) {
-  const { component } = params;
-
+// Updated to await params
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ component: string }>;
+}) {
+  const { component } = await params;
   const componentData = data.components[component];
 
   if (!componentData) {
@@ -33,10 +31,16 @@ export async function generateMetadata({ params }: ComponentPageProps) {
   };
 }
 
-export default function ComponentPage({ params }: ComponentPageProps) {
-  const componentData = data.components[params.component];
+// Updated to await params
+export default async function ComponentPage({
+  params,
+}: {
+  params: Promise<{ component: string }>;
+}) {
+  const { component } = await params;
+  const componentData = data.components[component];
+
   if (!componentData) return <div>Component not found</div>;
 
-  // Pass data down into the Client Component
   return <ComponentClient componentData={componentData} allData={data} />;
 }

@@ -127,14 +127,13 @@ function TestimonialButtons({
 }) {
   return (
     <div className="flex items-center justify-center px-2 py-1 rounded-lg gap-16 mt-48">
-      <ArrowLeft
-        onClick={onLeftClick}
-        className=" text-3xl cursor-pointer bg-slate-200"
-      />
-      <ArrowRight
-        onClick={onRightClick}
-        className=" text-3xl cursor-pointer bg-slate-200"
-      />
+      <button onClick={onLeftClick} className="cursor-pointer bg-slate-200">
+        <ArrowLeft className="text-3xl" />
+      </button>
+
+      <button onClick={onRightClick} className="cursor-pointer bg-slate-200">
+        <ArrowRight className="text-3xl" />
+      </button>
     </div>
   );
 }

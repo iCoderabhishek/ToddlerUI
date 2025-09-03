@@ -17,9 +17,11 @@ interface ComponentPreviewProps {
 }
 
 export function ComponentPreview({ componentData }: ComponentPreviewProps) {
-  const componentKey = Object.keys(componentsData.components).find(
-    (key) => componentsData.components[key].title === componentData.title
-  );
+  const componentKey = (
+    Object.keys(
+      componentsData.components
+    ) as (keyof typeof componentsData.components)[]
+  ).find((key) => componentsData.components[key].title === componentData.title);
 
   // Component renderers based on component key
   switch (componentKey) {

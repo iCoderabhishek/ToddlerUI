@@ -58,7 +58,9 @@ export function Sidebar({ categories }: SidebarProps) {
               alt="X"
             />
           </div>
-          <span className="font-medium" >Follow for updates</span>
+          <Link href={"https://x.com/0bhishek"} className="font-medium">
+            Follow for updates
+          </Link>
         </Link>
       </motion.button>
       <div className="relative overflow-hidden h-full py-6 pr-6 lg:py-8">
