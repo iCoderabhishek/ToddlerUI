@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TodlerUI
 
-## Getting Started
+A minimal, developer-focused UI library that provides **ready-to-copy React/Next.js components**.
+No installation required — just grab the code and use it in your project.
 
-First, run the development server:
+<img width="1900" height="923" alt="image" src="https://github.com/user-attachments/assets/eff20c0c-1ee8-4f5a-abbb-8853ddc4688b" />
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* **Copy-paste ready** React/Next.js components
+* **Modern stack support** (Next.js 15+, React 19, Tailwind CSS v4)
+* **Styled with Tailwind + Framer Motion + ShadCN**
+* **Lightweight & minimal** – no bloat, just clean components
+* **Developer-first**: built for fast prototyping and production use
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 Components
 
-## Learn More
+* Buttons
+* Cards
+* Modals
+* Navigation
+* Animations
+  …and more.
 
-To learn more about Next.js, take a look at the following resources:
+> For more components or custom needs, contact the (author)[https://github.com/iCoderabhishek]
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Browse the components on the website.
+2. Copy the code snippet.
+3. Paste it directly into your project.
 
-## Deploy on Vercel
+That’s it. No extra setup required.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+---
+
+Do you want me to also add a **Download/Install option** (like `npm install todlerui`) as if it’s a package, or keep it strictly **copy-paste only**?
