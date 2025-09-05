@@ -23,7 +23,8 @@ No installation required — just grab the code and use it in your project.
 * Animations
   …and more.
 
-> For more components or custom needs, contact the (author)[https://github.com/iCoderabhishek]
+> For more components or custom needs, [contact the author](https://github.com/iCoderabhishek).
+
 
 ## Usage
 
@@ -33,8 +34,4 @@ No installation required — just grab the code and use it in your project.
 
 That’s it. No extra setup required.
 
-
-
 ---
-
-Do you want me to also add a **Download/Install option** (like `npm install todlerui`) as if it’s a package, or keep it strictly **copy-paste only**?
